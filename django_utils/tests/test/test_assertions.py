@@ -1,4 +1,4 @@
-from shared_library.test.assertions import assert_function_registered_as_signal
+from django_utils.test.assertions import assert_function_registered_as_signal
 
 from django.db.models import Model
 from django.db.models.signals import post_save, m2m_changed

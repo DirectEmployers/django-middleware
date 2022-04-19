@@ -1,9 +1,9 @@
-"""Tests for code in `shared_library/models/queryset.py`"""
+"""Tests for code in `django_utils/models/queryset.py`"""
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.test import TestCase
 
-from shared_library.models import queryset
+from django_utils.models import queryset
 
 
 class TestModel(models.Model):

@@ -15,7 +15,7 @@ from django_filters.filters import Filter
 from graphql_relay.connection.arrayconnection import offset_to_cursor
 from graphql_relay.node.node import from_global_id
 
-from shared_library.graphql.errors import GraphQLError
+from django_utils.graphql.errors import GraphQLError
 
 
 class ScopeError(PermissionDenied):

@@ -1,4 +1,4 @@
-"""Test the contents of the shared_library/graphql/csrf.py file."""
+"""Test the contents of the django_utils/graphql/csrf.py file."""
 from http import cookies
 
 from django.conf import settings
@@ -6,7 +6,7 @@ from django.middleware.csrf import get_token
 from django.test import override_settings, SimpleTestCase
 from django.test.client import RequestFactory
 
-from shared_library.graphql import csrf
+from django_utils.graphql import csrf
 
 
 class TestCSRFCheck(SimpleTestCase):

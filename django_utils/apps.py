@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class SharedLibraryConfig(AppConfig):
-    name = "shared_library"
+    name = "django_utils"

@@ -7,7 +7,7 @@ from graphene_django.filter.filterset import (
 )
 from graphene_django.forms import GlobalIDFormField, GlobalIDMultipleChoiceField
 
-from shared_library.graphql.errors import GraphQLError
+from django_utils.graphql.errors import GraphQLError
 
 
 class ErrorHandlingFilterField:

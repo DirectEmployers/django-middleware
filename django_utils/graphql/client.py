@@ -23,7 +23,7 @@ class GraphQLSession(requests.Session):
 
     ```python
     from django.http import JsonResponse
-    from shared_library.graphql.client import GraphQLSession
+    from django_utils.graphql.client import GraphQLSession
 
     def view(request):
         # Create the session class and authorize it from the request

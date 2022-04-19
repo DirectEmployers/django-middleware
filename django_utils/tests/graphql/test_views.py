@@ -1,11 +1,11 @@
-"""Test the contents of shared_library/graphql/views.py"""
+"""Test the contents of django_utils/graphql/views.py"""
 import logging
 from unittest import mock
 
 from django.test import SimpleTestCase
 from graphql.error import GraphQLError, GraphQLLocatedError
 
-from shared_library.graphql import errors, views
+from django_utils.graphql import errors, views
 
 
 class TestDEGraphQLView(SimpleTestCase):
@@ -52,7 +52,7 @@ class TestDEGraphQLView(SimpleTestCase):
         result = views.DEGraphQLView.format_error(error)
         self.assertEqual(result["path"], ".".join(error.path))
 
-    @mock.patch("shared_library.graphql.views.send_error_to_datadog")
+    @mock.patch("django_utils.graphql.views.send_error_to_datadog")
     def test_format_error_datadog(self, mock_send: mock.Mock):
         """Test that send_error_to_datadog is called with the original error."""
         error = GraphQLLocatedError([], original_error=Exception("error"))
@@ -60,7 +60,7 @@ class TestDEGraphQLView(SimpleTestCase):
         mock_send.assert_called_with(error.original_error)
 
     @mock.patch.object(views.logger, "error")
-    @mock.patch("shared_library.graphql.views.send_error_to_datadog")
+    @mock.patch("django_utils.graphql.views.send_error_to_datadog")
     def test_format_error_datadog_fail(
         self, mock_send: mock.Mock, mock_error: mock.Mock
     ):

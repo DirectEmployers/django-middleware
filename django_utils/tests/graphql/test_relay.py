@@ -1,10 +1,10 @@
-"""Test the code from `shared_library/graphql/relay.py`."""
+"""Test the code from `django_utils/graphql/relay.py`."""
 
 from django.core.exceptions import ValidationError
 from django.test import SimpleTestCase
 from graphql_relay.node.node import to_global_id
 
-from shared_library.graphql import errors, relay
+from django_utils.graphql import errors, relay
 
 
 class TestIdOrRaise(SimpleTestCase):

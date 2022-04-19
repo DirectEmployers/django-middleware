@@ -6,7 +6,7 @@ from graphene_django.views import GraphQLView
 from graphql.error import GraphQLError, GraphQLLocatedError
 from graphql.error import format_error as format_graphql_error
 
-from shared_library.graphql.errors import (
+from django_utils.graphql.errors import (
     format_internal_error,
     format_located_error,
     get_error_path,

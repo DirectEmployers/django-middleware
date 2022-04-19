@@ -1,10 +1,10 @@
-"""Test the contents of shared_library/graphql/errors.py"""
+"""Test the contents of django_utils/graphql/errors.py"""
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from graphql import GraphQLError
 
-from shared_library.graphql import errors
+from django_utils.graphql import errors
 
 
 class TestError(TestCase):

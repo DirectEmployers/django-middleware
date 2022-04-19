@@ -4,8 +4,8 @@ from unittest import mock
 from django.test import SimpleTestCase
 from graphql_relay.node.node import to_global_id
 
-from shared_library.graphql.errors import GraphQLError
-from shared_library.graphql.filters import (
+from django_utils.graphql.errors import GraphQLError
+from django_utils.graphql.filters import (
     ErrorHandlingGlobalIDField,
     ErrorHandlingGlobalIDMultipleChoiceField,
     ErrorHandlingMultipleChoiceField,

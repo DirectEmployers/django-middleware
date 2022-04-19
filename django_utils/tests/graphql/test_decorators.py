@@ -4,8 +4,8 @@ from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.test import TestCase
 
-from shared_library.graphql.csrf import REASON_BAD_TOKEN, REASON_NO_CSRF_COOKIE
-from shared_library.graphql.decorators import (
+from django_utils.graphql.csrf import REASON_BAD_TOKEN, REASON_NO_CSRF_COOKIE
+from django_utils.graphql.decorators import (
     MISSING_CONTEXT_MSG,
     get_context_or_fail,
     requires_activities,
@@ -13,7 +13,7 @@ from shared_library.graphql.decorators import (
     requires_authentication,
     requires_csrf_check,
 )
-from shared_library.graphql.testing_mocks import make_mock_request
+from django_utils.graphql.testing_mocks import make_mock_request
 
 CSRF_MIDDLEWARE_NAME = "csrfmiddlewaretoken"
 
@@ -88,7 +88,7 @@ class GraphQLDecoratorTests(TestCase):
         result = requires_csrf_check(mocked_resolver)({}, info)
         self.assertEqual("continue", result)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities(self, mock_get):
         """
         Test that the requires_activities decorator raises PermissionDenied on an
@@ -116,7 +116,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaisesRegex(PermissionDenied, "activity a"):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_success(self, mock_get):
         """
         Test that the requires_activities decorator doesn't raise PermissionDenied on an
@@ -143,7 +143,7 @@ class GraphQLDecoratorTests(TestCase):
 
         self.assertTrue(resolver({}, info))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_authentication(self, mock_get):
         """
         Test that `requires_authentication` raises `PermissionError` when the API
@@ -168,7 +168,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaises(PermissionDenied):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_authentication_success(self, mock_get):
         """
         Test that `requires_authentication` doesn't raise `PermissionError` when the API
@@ -192,7 +192,7 @@ class GraphQLDecoratorTests(TestCase):
 
         self.assertTrue(resolver({}, info))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_is_staff_fails(self, mock_get):
         """
         Tests that @requires_activities raises an exception if is_staff is required,
@@ -220,7 +220,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaisesRegex(PermissionDenied, "staff"):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_is_superuser_fails(self, mock_get):
         """
         Tests that @requires_activities raises an exception if is_superuser is required,
@@ -248,7 +248,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaisesRegex(PermissionDenied, "superuser"):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_is_staff_passes(self, mock_get):
         """
         Tests that @requires_activities passes if is_staff is required, and is returned
@@ -278,7 +278,7 @@ class GraphQLDecoratorTests(TestCase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_is_superuser_passes(self, mock_get):
         """
         Tests that @requires_activities passes if is_superuser is required, and is
@@ -308,7 +308,7 @@ class GraphQLDecoratorTests(TestCase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_no_activities_passes(self, mock_get):
         """
         Tests that require_activities works if no activities are passed, but some
@@ -338,7 +338,7 @@ class GraphQLDecoratorTests(TestCase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_no_activities_fails(self, mock_get):
         """
         Tests that require_activities works if no activities are passed, but some
@@ -366,7 +366,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaisesRegex(PermissionDenied, "superuser"):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_http_status_error(self, mock_get):
         """
         Tests that the @requires_activities decorator raises a PermissionDenied
@@ -395,7 +395,7 @@ class GraphQLDecoratorTests(TestCase):
         with self.assertRaises(PermissionDenied):
             resolver({}, info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_requires_activities_requires_http_content_error(self, mock_get):
         """
         Tests that the @requires_activities decorator raises a PermissionDenied
@@ -440,7 +440,7 @@ class TestRequiredActivitiesBase(TestCase):
 
 
 class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_passes_all(self, mock_get):
         """
         Tests that @get_queryset_requires_activities passes if all possible requirements
@@ -461,7 +461,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_passes_activities(self, mock_get):
         """
         Tests the @get_queryset_requires_activities passes if all the required
@@ -478,7 +478,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_passes_is_staff(self, mock_get):
         """
         Tests that @get_queryset_requires_activities passes if is_staff is both required
@@ -495,7 +495,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_passes_is_superuser(self, mock_get):
         """
         Tests that @get_queryset_requires_activities passes if is_superuser is both
@@ -512,7 +512,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         except PermissionDenied as e:
             self.fail("permission error should not be raised: %s" % str(e))
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_missing_activity(self, mock_get):
         """
         Tests that @get_queryset_requires_activities will raise an exception if an
@@ -527,7 +527,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         with self.assertRaisesRegex(PermissionDenied, "activity three"):
             resolver(MagicMock(), MagicMock(), self.info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_missing_is_staff(self, mock_get):
         """
         Tests that @get_queryset_requires_activities will raise an exception if is_staff
@@ -542,7 +542,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         with self.assertRaisesRegex(PermissionDenied, "staff"):
             resolver(MagicMock(), MagicMock(), self.info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_missing_is_superuser(self, mock_get):
         """
         Tests that @get_queryset_requires_activities raises an exception if is_superuser
@@ -557,7 +557,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         with self.assertRaisesRegex(PermissionDenied, "superuser"):
             resolver(MagicMock(), MagicMock(), self.info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_http_status_error(self, mock_get):
         """
         Tests that the @get_queryset_requires_activities decorator raises a
@@ -583,7 +583,7 @@ class TestQuerysetRequiresActivities(TestRequiredActivitiesBase):
         with self.assertRaises(PermissionDenied):
             resolver(MagicMock(), MagicMock(), self.info)
 
-    @patch("shared_library.graphql.decorators.requests.get")
+    @patch("django_utils.graphql.decorators.requests.get")
     def test_queryset_requires_activities_http_content_error(self, mock_get):
         """
         Tests that the @get_queryset_requires_activities decorator raises a

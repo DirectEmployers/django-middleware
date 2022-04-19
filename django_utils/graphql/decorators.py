@@ -8,7 +8,7 @@ from django.core.exceptions import PermissionDenied
 from django.core.handlers.wsgi import WSGIRequest
 from graphql.execution.base import ResolveInfo
 
-from shared_library.graphql.csrf import CsrfException, csrf_check
+from django_utils.graphql.csrf import CsrfException, csrf_check
 
 MISSING_CONTEXT_MSG = "Cannot do anything without a resolver context."
 
@@ -32,7 +32,7 @@ def requires_authentication(resolver):
     The difference between this and the `requires_authentication` from
     `graphql_myjobs.decorators` is that this one sends an API request to the
     `user-management` pod to determine the state of the user, without having to
-    reference a `User` instance (forbidden in `shared_library`).
+    reference a `User` instance (forbidden in `django_utils`).
     """
 
     @wraps(resolver)

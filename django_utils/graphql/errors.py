@@ -16,7 +16,7 @@ from django.db.utils import IntegrityError
 from django.shortcuts import _get_queryset
 from graphene import ObjectType, String
 
-from shared_library.graphql.csrf import CsrfException
+from django_utils.graphql.csrf import CsrfException
 
 logger = logging.getLogger(__name__)
 

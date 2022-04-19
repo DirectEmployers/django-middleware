@@ -1,9 +1,9 @@
-"""Test the contents of `shared_library/graphql/object_types.py`."""
+"""Test the contents of `django_utils/graphql/object_types.py`."""
 
 from django.contrib.gis.geos.point import Point
 from django.test import SimpleTestCase
 
-from shared_library.graphql import object_types
+from django_utils.graphql import object_types
 
 
 class TestGeoDjangoPoint(SimpleTestCase):

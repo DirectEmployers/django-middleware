@@ -1,4 +1,4 @@
-"""Test the contents of shared_library/graphql/django_connection.py"""
+"""Test the contents of django_utils/graphql/django_connection.py"""
 from inspect import cleandoc
 from unittest import mock
 
@@ -7,7 +7,7 @@ from django.test import SimpleTestCase
 from graphene.relay import Node
 from graphql_relay.node.node import to_global_id
 
-from shared_library.graphql import django_connection
+from django_utils.graphql import django_connection
 
 
 class TestConvertFieldLookup(SimpleTestCase):
