@@ -1,0 +1,5 @@
+from django.apps import AppConfig
+
+
+class SharedLibraryConfig(AppConfig):
+    name = "shared_library"

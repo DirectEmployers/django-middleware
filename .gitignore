@@ -1,0 +1,116 @@
+# Compiled
+*.pyc
+*.db
+*.flv
+*.wmv
+*.gz
+*.unison.tmp
+
+# K8s
+deploy/k8s/docker/dev/requirements.txt
+deploy/k8s/docker/dev/requirements-dev.txt
+deploy/k8s/docker/lb/microsites.conf
+**/local-dev.yaml
+
+# Misc
+files/
+media/
+/reports/
+static-files/100x50
+static-files/content_profile
+dev_*
+.idea
+CACHE
+static/redirect.css
+webpack-stats.json
+.mypy_cache
+schema.json
+**/.venv
+jv-analysis--*.html
+**/tilt_modules/
+**/node_modules/
+
+# Gulp stuff
+gulp/profile.json
+gulp/coverage/
+gulp/src/**/__generated__
+static/bundle/
+gulp/.cache
+gulp/.bash_history
+gulp/.yarnrc
+
+# Editor artifacts
+*~
+*-
+*#
+.project
+.pydevproject
+.tmp*
+content_226
+.coverage
+*.swp
+.ropeproject
+tags
+htmlcov
+
+# Visual Studio Code
+# https://github.com/github/gitignore/blob/master/Global/VisualStudioCode.gitignore
+.vscode/*
+!.vscode/tasks.json
+!.vscode/extensions.json
+!.vscode/settings.default.json
+*.code-workspace
+
+# Prettier config
+.prettierrc
+
+# Local Settings
+local_settings*.py
+deploy/settings.local.py
+*dev_settings*.py
+deploy/k8s/certs/
+
+# Log Files
+*.log
+*.log.*
+logfile
+comparison_log/*.json
+
+# OS generated
+*.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+*.directory
+*.settings
+.directory
+directseo
+
+# Secret stuff. Shhhhh.
+secrets.py
+de_secrets.py
+gts-credentials.json
+
+local_settings.py
+
+# Deployment
+static/admin/
+static/django_extensions
+static/endless_pagination
+static/fsm
+collected_static/
+
+# Helm
+.helm
+
+# Terraform
+terraform.tfstate
+terraform.tfstate.*
+tfplan
+tfconfig.tf
+.terraform
+
+# Produced by building lambda zip locally
+myjobs-aws-lambda-code*
+
+*-partner-library-status.xlsx
