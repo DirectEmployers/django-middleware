@@ -1,4 +1,5 @@
-"""
+"""Django middleware for simple health checks.
+
 HealthCheckMiddleware courtesy of:
 https://www.ianlewis.org/en/kubernetes-health-checks-django
 """
@@ -10,17 +11,35 @@ from django.http import HttpResponse, HttpResponseServerError
 logger = logging.getLogger("healthz")
 
 
-class HealthCheckMiddleware(object):
+class HealthCheckMiddleware:
+    """Simple Django health check endpoints.
+
+    Endpoints:
+    healthz/    Responds with 200 OK if server can return a simple response.
+    readiness/  Responds with 200 OK if requisite databases and caches are ready.
+    """
+
+    healthz_endpoint = "/healthz"
+    readiness_endpoint = "/readiness"
+
+    endpoints = [healthz_endpoint, readiness_endpoint]
+
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        if request.method == "GET":
+        if request.method == "GET" and request.path in self.endpoints:
             if request.path == "/readiness":
-                return self.readiness(request)
+                response = self.readiness(request)
             elif request.path == "/healthz":
-                return self.healthz(request)
-        return self.get_response(request)
+                response = self.healthz(request)
+
+            # Disable DEBUG and INFO logs when responding to these endpoints.
+            logging.disable(logging.INFO)
+        else:
+            response = self.get_response(request)
+
+        return response
 
     def healthz(self, request):
         """
@@ -33,9 +52,8 @@ class HealthCheckMiddleware(object):
         Returns that the server is ready to receive requests/connections.
         """
 
-        # Connect to each database and do a generic standard SQL query
-        # that doesn't write any data and doesn't depend on any tables
-        # being present.
+        # Connect to each database and do a generic standard SQL query that doesn't
+        # write any data and doesn't depend on any tables being present.
         try:
             from django.db import connections
 
