@@ -1,4 +1,5 @@
-"""
+"""Django middleware for simple health checks.
+
 HealthCheckMiddleware courtesy of:
 https://www.ianlewis.org/en/kubernetes-health-checks-django
 """
@@ -51,9 +52,8 @@ class HealthCheckMiddleware:
         Returns that the server is ready to receive requests/connections.
         """
 
-        # Connect to each database and do a generic standard SQL query
-        # that doesn't write any data and doesn't depend on any tables
-        # being present.
+        # Connect to each database and do a generic standard SQL query that doesn't
+        # write any data and doesn't depend on any tables being present.
         try:
             from django.db import connections
 
