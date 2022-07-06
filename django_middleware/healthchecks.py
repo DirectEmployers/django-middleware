@@ -10,7 +10,53 @@ import logging
 
 from django.http import HttpResponse, HttpResponseServerError
 
-logger = logging.getLogger("healthz")
+
+HEALTHZ_ENDPOINT = "/healthz"
+READINESS_ENDPOINT = "/readiness"
+
+
+def msg_filter(record):
+    if HEALTHZ_ENDPOINT in record.msg or READINESS_ENDPOINT in record.msg:
+        return 0
+    return 1
+
+
+logger = logging.getLogger("django")
+logger.addFilter(msg_filter)
+
+
+def check_readiness():
+    """Raise as exception if the server is not ready."""
+
+    # Connect to each database and do a generic standard SQL query that doesn't
+    # write any data and doesn't depend on any tables being present.
+    try:
+        from django.db import connections
+
+        for name in connections:
+            cursor = connections[name].cursor()
+            cursor.execute("SELECT 1;")
+            row = cursor.fetchone()
+            if row is None:
+                return HttpResponseServerError("db: invalid response")
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError("db: cannot connect to database.")
+
+    # Call get_stats() to connect to each memcached instance and get its stats.
+    # This can effectively check if each is online.
+    try:
+        from django.core.cache import caches
+        from django.core.cache.backends.memcached import BaseMemcachedCache
+
+        for cache in caches.all():
+            if isinstance(cache, BaseMemcachedCache):
+                stats = cache._cache.get_stats()
+                if len(stats) != len(cache._servers):
+                    return HttpResponseServerError("cache: cannot connect to cache.")
+    except Exception as e:
+        logger.exception(e)
+        return HttpResponseServerError("cache: cannot connect to cache.")
 
 
 class HealthCheckMiddleware:
@@ -21,74 +67,22 @@ class HealthCheckMiddleware:
     readiness/  Responds with 200 OK if requisite databases and caches are ready.
     """
 
-    healthz_endpoint = "/healthz"
-    readiness_endpoint = "/readiness"
-
-    endpoints = [healthz_endpoint, readiness_endpoint]
+    endpoints = (
+        HEALTHZ_ENDPOINT,
+        READINESS_ENDPOINT,
+    )
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
+        if request.method != "GET" or request.path not in self.endpoints:
+            # Passthrough if we aren't accessing health checks.
+            return self.get_response(request)
 
-        if request.method == "GET" and request.path in self.endpoints:
-            # Disable DEBUG and INFO logs when responding to these endpoints.
-            orig_level = logging.root.getEffectiveLevel()
-            logging.disable(logging.INFO)
+        if request.path == "/readiness":
+            # Throw an exception if checks don't pass.
+            check_readiness()
 
-            if request.path == "/readiness":
-                response = self.readiness(request)
-            else:
-                response = self.healthz(request)
-
-            # Restore logging level.
-            logging.disable(orig_level)
-
-            return response
-
-        return self.get_response(request)
-
-    def healthz(self, request):
-        """
-        Returns that the server is alive.
-        """
+        # Return a simple 200 OK response.
         return HttpResponse("OK")
-
-    def readiness(self, request):
-        """
-        Returns that the server is ready to receive requests/connections.
-        """
-
-        # Connect to each database and do a generic standard SQL query that doesn't
-        # write any data and doesn't depend on any tables being present.
-        try:
-            from django.db import connections
-
-            for name in connections:
-                cursor = connections[name].cursor()
-                cursor.execute("SELECT 1;")
-                row = cursor.fetchone()
-                if row is None:
-                    return HttpResponseServerError("db: invalid response")
-        except Exception as e:
-            logger.exception(e)
-            return HttpResponseServerError("db: cannot connect to database.")
-
-        # Call get_stats() to connect to each memcached instance and get its stats.
-        # This can effectively check if each is online.
-        try:
-            from django.core.cache import caches
-            from django.core.cache.backends.memcached import BaseMemcachedCache
-
-            for cache in caches.all():
-                if isinstance(cache, BaseMemcachedCache):
-                    stats = cache._cache.get_stats()
-                    if len(stats) != len(cache._servers):
-                        return HttpResponseServerError(
-                            "cache: cannot connect to cache."
-                        )
-        except Exception as e:
-            logger.exception(e)
-            return HttpResponseServerError("cache: cannot connect to cache.")
-
-        return self.healthz(request)
