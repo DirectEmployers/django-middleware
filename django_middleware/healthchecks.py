@@ -1,5 +1,7 @@
 """Django middleware for simple health checks.
 
+Requires Django 3.2+.
+
 HealthCheckMiddleware courtesy of:
 https://www.ianlewis.org/en/kubernetes-health-checks-django
 """
@@ -28,18 +30,23 @@ class HealthCheckMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
+
         if request.method == "GET" and request.path in self.endpoints:
+            # Disable DEBUG and INFO logs when responding to these endpoints.
+            orig_level = logging.root.getEffectiveLevel()
+            logging.disable(logging.INFO)
+
             if request.path == "/readiness":
                 response = self.readiness(request)
-            elif request.path == "/healthz":
+            else:
                 response = self.healthz(request)
 
-            # Disable DEBUG and INFO logs when responding to these endpoints.
-            logging.disable(logging.INFO)
-        else:
-            response = self.get_response(request)
+            # Restore logging level.
+            logging.disable(orig_level)
 
-        return response
+            return response
+
+        return self.get_response(request)
 
     def healthz(self, request):
         """
@@ -84,4 +91,4 @@ class HealthCheckMiddleware:
             logger.exception(e)
             return HttpResponseServerError("cache: cannot connect to cache.")
 
-        return HttpResponse("OK")
+        return self.healthz(request)
