@@ -20,7 +20,7 @@ def msg_filter(record):
         HEALTHZ_ENDPOINT in record.getMessage()
         or READINESS_ENDPOINT in record.getMessage()
     ):
-        return 0
+        return record.levelno > logging.INFO
     return 1
 
 
