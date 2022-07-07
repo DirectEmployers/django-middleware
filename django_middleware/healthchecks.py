@@ -16,12 +16,15 @@ READINESS_ENDPOINT = "/readiness"
 
 
 def msg_filter(record):
-    if HEALTHZ_ENDPOINT in record.msg or READINESS_ENDPOINT in record.msg:
+    if (
+        HEALTHZ_ENDPOINT in record.getMessage()
+        or READINESS_ENDPOINT in record.getMessage()
+    ):
         return 0
     return 1
 
 
-logger = logging.getLogger("django")
+logger = logging.getLogger("django.server")
 logger.addFilter(msg_filter)
 
 
