@@ -6,5 +6,7 @@ setup(
     description="Reusable Django utilities for DE apps.",
     url="https://github.com/DirectEmployers/django-utils",
     license="Copyright © 2011-2022, DirectEmployers Association",
-    packages=find_packages(),
+    packages=find_packages(exclude=["tests*"]),
+    python_requires=">=3.8",
+    install_requires=["django==3.2.*"],
 )
