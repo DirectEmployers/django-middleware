@@ -25,12 +25,21 @@ class HealthzTests(TestCase):
 
 
 class ReadinessTests(TestCase):
+    db_error_msg = "MySQL: Connection Error"
+
     def test_readiness_endpoint(self):
         response = call_middleware("/readiness")
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch.object(connection, "cursor", side_effect=DatabaseError)
+    @mock.patch.object(
+        connection, "cursor", side_effect=DatabaseError(db_error_msg)
+    )
     def test_readiness_errors(self, mock):
-        with self.assertLogs("django.server"):
+        log_level = "ERROR"
+        logger = "django.server"
+
+        with self.assertLogs(logger, log_level) as logs:
             response = call_middleware("/readiness")
             self.assertEqual(response.status_code, 500)
+
+            self.assertIn(f"{log_level}:{logger}:{self.db_error_msg}", logs.output)

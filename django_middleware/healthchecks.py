@@ -49,7 +49,7 @@ def databases_ready() -> bool:
         except Exception as exc:
             ready = False
             logger.error(f"Database: Error while attempting to connect to '{name}'")
-            logger.exception(exc)
+            logger.error(exc)
 
     return ready
 
@@ -77,7 +77,7 @@ def caches_ready() -> bool:
         except Exception as exc:
             ready = False
             logger.error("Cache: Error while attempting to connect to '{cache}'")
-            logger.exception(exc)
+            logger.error(exc)
 
     return ready
 
@@ -90,10 +90,10 @@ def check_readiness() -> HttpResponse:
         ready = databases_ready() and caches_ready()
     except ModuleNotFoundError as exc:
         logger.error("Import: Error while importing Django modules")
-        logger.exception(exc)
+        logger.error(exc)
     except Exception as exc:
         logger.error("Unknown: Critical error")
-        logger.exception(exc)
+        logger.error(exc)
 
     return HttpResponse("OK") if ready else HttpResponseServerError("Not Ready")
 
