@@ -28,7 +28,7 @@ logger.addFilter(msg_filter)
 
 
 def databases_ready() -> bool:
-    """Check health of database connections.
+    """Check health of databases.
 
     Connect to each database and do a generic standard SQL query that doesn't write
     any data and doesn't depend on any tables being present.
@@ -55,7 +55,7 @@ def databases_ready() -> bool:
 
 
 def caches_ready() -> bool:
-    """Check health of cache connections.
+    """Check health of caches.
 
     Calls get_stats() to connect to each memcached instance and get its stats.
     This can effectively check if each is online.
@@ -76,14 +76,17 @@ def caches_ready() -> bool:
                 logger.error(f"Cache: Unable to get stats for '{cache}'")
         except Exception as exc:
             ready = False
-            logger.error("Cache: Error while attempting to connect to '{cache}'")
+            logger.error(f"Cache: Error while attempting to connect to '{cache}'")
             logger.error(exc)
 
     return ready
 
 
 def check_readiness() -> HttpResponse:
-    """Raise as exception if the server is not ready."""
+    """Raise an exception when the server is not ready.
+
+    Logs all found issues as errors.
+    """
     ready = True
 
     try:
@@ -119,7 +122,7 @@ class HealthCheckMiddleware:
             # Passthrough if we aren't accessing health checks.
             return self.get_response(request)
 
-        if request.path == "/readiness":
+        if request.path == READINESS_ENDPOINT:
             # Throw an exception if checks don't pass.
             return check_readiness()
 
