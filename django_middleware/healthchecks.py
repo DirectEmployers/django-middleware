@@ -118,9 +118,14 @@ class HealthCheckMiddleware:
         self.get_response = get_response
 
     def __call__(self, request) -> HttpResponse:
+        from django.urls import ResolverMatch
+
         if request.method != "GET" or request.path not in self.endpoints:
             # Passthrough if we aren't accessing health checks.
             return self.get_response(request)
+
+        # Add a resolver_match so that dd-trace can give the span a proper resource.
+        request.resolver_match = ResolverMatch(self, (request,), {}, route=request.path)
 
         if request.path == READINESS_ENDPOINT:
             # Throw an exception if checks don't pass.
