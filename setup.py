@@ -8,5 +8,5 @@ setup(
     license="Copyright © 2011-2024, DirectEmployers Association",
     packages=find_packages(exclude=["tests*"]),
     python_requires=">=3.11",
-    install_requires=["django>=4.2"],
+    install_requires=["django==4.2.*"],
 )
