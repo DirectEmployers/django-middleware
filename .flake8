@@ -5,32 +5,4 @@ ignore = E203, E231, E266, E501, W503
 max-line-length = 80
 max-complexity = 18
 select = B,C,E,F,W,T4,B9
-extend-ignore =
-    # These exclusions were added because they impacted a large amount of the code base and should be addressed individually in their own PRs.
-    # In addition, excluding them for now allows us to implement flake8 while we continue to improve our code base.
-    # People should feel willing to remove and fix these at any time.
-    C901, # Checks function complexity.  Fix later.
-    F405, # variable may be coming from wildcard import.
-    F841, # variable is assigned but unused
-    F403, # wildcard import.
-    E722, # do not use base excepts
-exclude  =
-    .git,
-    .venv,
-    */dist-packages,
-    apollo_gateway/node_modules,
-    de_secrets.py
-    gulp,
-    secrets.py,
-    */.typings
-per-file-ignores =
-    # SQLAlchemy expects expressions to use "a == True" rather than "a is True"
-    # in order to properly construct a SQL query from the code
-    monolith/src/myreports/datasources/site_owner_syndication.py:E712
-    monolith/src/myreports/datasources/tc_prospect_data.py:E712
-    # We do a lot of import * in settings files
-    container_settings.py:F821
-    monolith/src/deploy/usermanagement_staging.py:F821
-    monolith/src/deploy/settings.myjobs_staging.py:F821
-    monolith/src/deploy/usermanagement_qc.py:F821
-    monolith/src/deploy/settings.myjobs_qc.py:F821
+exclude = .venv
