@@ -27,6 +27,10 @@ logger = logging.getLogger("django.server")
 logger.addFilter(msg_filter)
 
 
+logger = logging.getLogger("gunicorn.access")
+logger.addFilter(msg_filter)
+
+
 def databases_ready() -> bool:
     """Check health of databases.
 
