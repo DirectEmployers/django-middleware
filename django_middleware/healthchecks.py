@@ -1,6 +1,6 @@
 """Django middleware for simple health checks.
 
-Requires Django 3.2+.
+Requires Django 5.2+.
 
 HealthCheckMiddleware courtesy of:
 https://www.ianlewis.org/en/kubernetes-health-checks-django

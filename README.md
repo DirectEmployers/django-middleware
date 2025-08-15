@@ -2,7 +2,7 @@
 Python package of reusable middleware for Django apps.
 
 ## Package Installation
-The `django-middleware` package is hosted as a private repository on GitHub, so [a machine-user token will be necessary to import it with pip](https://docs.readthedocs.io/en/stable/guides/private-python-packages.html#github). Pinning this requirement from a release archive is recommended.
+The `django-middleware` package is hosted as a public repository on GitHub. Pinning this requirement from a release archive is recommended.
 
 ### django_middleware.healthchecks.HealthCheckMiddleware
 Allow [Kubernetes liveness, readiness, and startup probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/) to make test your Django server container with `healthz/` and `readiness/` endpoints.
